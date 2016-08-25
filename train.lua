@@ -65,6 +65,7 @@ local function train()
   assert(offset == settings.block_offset)
   local criterion = nn.MSECriterion():cuda()
   local x = torch.load(settings.images)
+  print(#x)
   local train_x, valid_x = split_data(x,
     math.floor(settings.validation_ratio * #x),
     settings.validation_crops)
