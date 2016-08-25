@@ -6,7 +6,7 @@ require 'pl'
 -- global settings
 
 if package.preload.settings then
-   return package.preload.settings
+  return package.preload.settings
 end
 
 -- default tensor type
@@ -33,18 +33,18 @@ cmd:option("-core", 2, 'cpu core')
 
 local opt = cmd:parse(arg)
 for k, v in pairs(opt) do
-   settings[k] = v
+  settings[k] = v
 end
 if settings.method == "noise" then
-   settings.model_file = string.format("%s/noise%d_model.t7", settings.model_dir, settings.noise_level)
+  settings.model_file = string.format("%s/noise%d_model.t7", settings.model_dir, settings.noise_level)
 elseif settings.method == "scale" then
-   settings.model_file = string.format("%s/scale%.1fx_model.t7", settings.model_dir, settings.scale)
-   settings.denoise_model_file = string.format("%s/noise%d_model.t7", settings.model_dir, settings.noise_level)
+  settings.model_file = string.format("%s/scale%.1fx_model.t7", settings.model_dir, settings.scale)
+  settings.denoise_model_file = string.format("%s/noise%d_model.t7", settings.model_dir, settings.noise_level)
 else
-   error("unknown method: " .. settings.method)
+  error("unknown method: " .. settings.method)
 end
 if not (settings.scale == math.floor(settings.scale) and settings.scale % 2 == 0) then
-   error("scale must be mod-2")
+  error("scale must be mod-2")
 end
 torch.setnumthreads(settings.core)
 
