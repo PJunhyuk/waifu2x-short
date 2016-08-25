@@ -34,26 +34,18 @@ local function split_data(x, test_size)
   return train_x, valid_x
 end
 
-local function make_validation_set(x, transformer, n, patches)
+local function make_validation_set(x, transformer, n)
   n = n or 4
-  local validation_patches = math.min(16, patches or 16)
   local data = {}
   for i = 1, #x do
-    for k = 1, math.max(n / validation_patches, 1) do
-      local xy = transformer(x[i], true, validation_patches)
-      for j = 1, #xy do
-        table.insert(data, {x = xy[j][1], y = xy[j][2]})
-      end
+    for k = 1, n do
+      local x, y = transformer(x[i], true)
+      table.insert(data, {x = x:reshape(1, x:size(1), x:size(2), x:size(3)),
+          y = y:reshape(1, y:size(1), y:size(2), y:size(3))})
     end
     xlua.progress(i, #x)
     collectgarbage()
   end
-  local new_data = {}
-  local perm = torch.randperm(#data)
-  for i = 1, perm:size(1) do
-    new_data[i] = data[perm[i]]
-  end
-  data = new_data
   return data
 end
 
